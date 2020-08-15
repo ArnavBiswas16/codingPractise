@@ -33,7 +33,10 @@ func main() {
 	inorder(root)
 	fmt.Println("\npostorder")
 	postorder(root)
+	fmt.Println("\nlevelorder")
+	levelorder(root)
 
+	fmt.Println(checkBST(root))
 }
 
 func insert(root *Node, item int) *Node {
@@ -143,4 +146,76 @@ func postorder(root *Node) {
 	inorder(root.right)
 	fmt.Print(root.item, ", ")
 
+}
+
+func levelorder(root *Node) {
+	if root == nil {
+		return
+	}
+	var q []*Node
+
+	if len(q) == 0 {
+		q = enqueue(q, root)
+	}
+
+	for len(q) != 0 {
+		fmt.Print(q[0].item, ", ")
+
+		if q[0].left != nil {
+			q = enqueue(q, q[0].left)
+		}
+
+		if q[0].right != nil {
+			q = enqueue(q, q[0].right)
+		}
+
+		q = dequeue(q)
+	}
+
+	// return
+}
+
+func enqueue(queue []*Node, node *Node) []*Node {
+	queue = append(queue, node) // Simply append to enqueue.
+	return queue
+}
+
+func dequeue(queue []*Node) []*Node {
+
+	if len(queue) != 0 {
+		return queue[1:] // Slice off the element once it is dequeued.
+	}
+	return queue
+}
+
+func checkBST(root *Node) bool {
+	if root == nil {
+		return false
+	}
+	var q []*Node
+
+	if len(q) == 0 {
+		q = enqueue(q, root)
+	}
+
+	for len(q) != 0 {
+		curr := q[0]
+		if curr.left == nil && curr.left.item >= curr.item {
+			return false
+		}
+		if curr.right == nil && curr.right.item < curr.item {
+			return false
+
+		}
+		if curr.left == nil {
+			q = enqueue(q, curr.left)
+
+		}
+		if curr.right == nil {
+			q = enqueue(q, curr.right)
+
+		}
+		q = dequeue(q)
+	}
+	return true
 }
