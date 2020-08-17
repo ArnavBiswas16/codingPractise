@@ -35,8 +35,11 @@ func main() {
 	postorder(root)
 	fmt.Println("\nlevelorder")
 	levelorder(root)
+	fmt.Println("\n", checkBST(root))
 
-	fmt.Println(checkBST(root))
+	root = delete(root, 30)
+	fmt.Println("\npreorder")
+	preorder(root)
 }
 
 func insert(root *Node, item int) *Node {
@@ -81,6 +84,18 @@ func findMin(root *Node) int {
 		return findMin(root.left)
 	} else {
 		return root.item
+	}
+}
+
+func FindMinNode(root *Node) *Node {
+	if root == nil {
+		return nil
+	}
+
+	if root.left != nil {
+		return FindMinNode(root.left)
+	} else {
+		return root
 	}
 }
 
@@ -171,8 +186,6 @@ func levelorder(root *Node) {
 
 		q = dequeue(q)
 	}
-
-	// return
 }
 
 func enqueue(queue []*Node, node *Node) []*Node {
@@ -200,10 +213,10 @@ func checkBST(root *Node) bool {
 
 	for len(q) != 0 {
 		curr := q[0]
-		if curr.left == nil && curr.left.item >= curr.item {
+		if curr.left == nil || curr.left.item >= curr.item {
 			return false
 		}
-		if curr.right == nil && curr.right.item < curr.item {
+		if curr.right == nil || curr.right.item < curr.item {
 			return false
 
 		}
@@ -218,4 +231,32 @@ func checkBST(root *Node) bool {
 		q = dequeue(q)
 	}
 	return true
+}
+
+func delete(root *Node, item int) *Node {
+	// fmt.Println(item)
+	if root == nil {
+		return root
+	} else if item < root.item {
+		root.left = delete(root.left, item)
+	} else if item > root.item {
+		root.right = delete(root.right, item)
+	} else if item == root.item {
+		//case 1
+		if root.left == nil && root.right == nil {
+			root = nil
+		} else if root.left == nil {
+			// temp := root
+			root = root.right
+		} else if root.right == nil {
+			// temp := root
+			root = root.left
+		} else {
+			temp := FindMinNode(root.right)
+			root.item = temp.item
+			root.right = delete(root.right, root.item)
+		}
+	}
+
+	return root
 }
