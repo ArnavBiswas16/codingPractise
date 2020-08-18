@@ -22,24 +22,25 @@ func main() {
 	root = insert(root, 13)
 	root = insert(root, 32)
 	root = insert(root, 100)
-	fmt.Println(root.item)
-	fmt.Println(Search(root, 2))
-	fmt.Println(findMin(root))
-	fmt.Println(findMax(root))
-	fmt.Println(findHeight(root))
-	fmt.Println("preorder")
-	preorder(root)
-	fmt.Println("\ninorder")
-	inorder(root)
-	fmt.Println("\npostorder")
-	postorder(root)
-	fmt.Println("\nlevelorder")
-	levelorder(root)
+	// fmt.Println(root.item)
+	// fmt.Println(Search(root, 2))
+	// fmt.Println(findMin(root))
+	// fmt.Println(findMax(root))
+	// fmt.Println(findHeight(root))
+	// fmt.Println("preorder")
+	// preorder(root)
+	// fmt.Println("\ninorder")
+	// inorder(root)
+	// fmt.Println("\npostorder")
+	// postorder(root)
+	// fmt.Println("\nlevelorder")
+	// levelorder(root)
 	fmt.Println("\n", checkBST(root))
 
-	root = delete(root, 30)
-	fmt.Println("\npreorder")
-	preorder(root)
+	// root = delete(root, 30)
+	// fmt.Println("\npreorder")
+	// preorder(root)
+	// fmt.Print("\n", inorderSucc(root, 13).item)
 }
 
 func insert(root *Node, item int) *Node {
@@ -63,11 +64,11 @@ func createNewNode(root *Node, item int) *Node {
 	return node
 }
 
-func Search(root *Node, data int) bool {
+func Search(root *Node, data int) *Node {
 	if root == nil {
-		return false
+		return nil
 	} else if root.item == data {
-		return true
+		return root
 	} else if data <= root.item {
 		return Search(root.left, data)
 	} else {
@@ -213,22 +214,23 @@ func checkBST(root *Node) bool {
 
 	for len(q) != 0 {
 		curr := q[0]
-		if curr.left == nil || curr.left.item >= curr.item {
+		if curr.left != nil && curr.left.item >= curr.item {
 			return false
 		}
-		if curr.right == nil || curr.right.item < curr.item {
+		if curr.right != nil && curr.right.item < curr.item {
 			return false
 
 		}
-		if curr.left == nil {
+		if curr.left != nil {
 			q = enqueue(q, curr.left)
 
 		}
-		if curr.right == nil {
+		if curr.right != nil {
 			q = enqueue(q, curr.right)
 
 		}
 		q = dequeue(q)
+		fmt.Println(q)
 	}
 	return true
 }
@@ -246,10 +248,8 @@ func delete(root *Node, item int) *Node {
 		if root.left == nil && root.right == nil {
 			root = nil
 		} else if root.left == nil {
-			// temp := root
 			root = root.right
 		} else if root.right == nil {
-			// temp := root
 			root = root.left
 		} else {
 			temp := FindMinNode(root.right)
@@ -259,4 +259,32 @@ func delete(root *Node, item int) *Node {
 	}
 
 	return root
+}
+
+func inorderSucc(root *Node, item int) *Node {
+
+	if root == nil {
+		return root
+	}
+	current := Search(root, item)
+	if current == nil {
+		return nil
+	} else {
+		if current.right != nil {
+			return FindMinNode(current.right)
+		} else {
+
+			var succ *Node
+			ancestor := root
+			for ancestor != current {
+				if current.item < ancestor.item {
+					succ = ancestor
+					ancestor = ancestor.left
+				} else {
+					ancestor = ancestor.right
+				}
+			}
+			return succ
+		}
+	}
 }
