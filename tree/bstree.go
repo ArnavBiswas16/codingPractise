@@ -22,25 +22,25 @@ func main() {
 	root = insert(root, 13)
 	root = insert(root, 32)
 	root = insert(root, 100)
-	// fmt.Println(root.item)
-	// fmt.Println(Search(root, 2))
-	// fmt.Println(findMin(root))
-	// fmt.Println(findMax(root))
-	// fmt.Println(findHeight(root))
-	// fmt.Println("preorder")
-	// preorder(root)
-	// fmt.Println("\ninorder")
-	// inorder(root)
-	// fmt.Println("\npostorder")
-	// postorder(root)
-	// fmt.Println("\nlevelorder")
-	// levelorder(root)
+	fmt.Println(root.item)
+	fmt.Println(Search(root, 2))
+	fmt.Println(findMin(root))
+	fmt.Println(findMax(root))
+	fmt.Println(findHeight(root))
+	fmt.Println("preorder")
+	preorder(root)
+	fmt.Println("\ninorder")
+	inorder(root)
+	fmt.Println("\npostorder")
+	postorder(root)
+	fmt.Println("\nlevelorder")
+	levelorder(root)
 	fmt.Println("\n", checkBST(root))
 
-	// root = delete(root, 30)
-	// fmt.Println("\npreorder")
-	// preorder(root)
-	// fmt.Print("\n", inorderSucc(root, 13).item)
+	root = delete(root, 30)
+	fmt.Println("\npreorder")
+	preorder(root)
+	fmt.Print("\n", inorderSucc(root, 13).item)
 }
 
 func insert(root *Node, item int) *Node {
@@ -230,7 +230,6 @@ func checkBST(root *Node) bool {
 
 		}
 		q = dequeue(q)
-		fmt.Println(q)
 	}
 	return true
 }
@@ -244,14 +243,14 @@ func delete(root *Node, item int) *Node {
 	} else if item > root.item {
 		root.right = delete(root.right, item)
 	} else if item == root.item {
-		//case 1
+		//case 1  if leaf node
 		if root.left == nil && root.right == nil {
 			root = nil
-		} else if root.left == nil {
+		} else if root.left == nil { // 1 child
 			root = root.right
-		} else if root.right == nil {
+		} else if root.right == nil { // 1 child
 			root = root.left
-		} else {
+		} else { // both child
 			temp := FindMinNode(root.right)
 			root.item = temp.item
 			root.right = delete(root.right, root.item)
