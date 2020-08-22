@@ -44,6 +44,7 @@ func main() {
 	fmt.Println("\npreorder")
 	preorder(root)
 	fmt.Print("\n", inorderSucc(root, 13).item)
+	spiralLevelorder(root)
 }
 
 func insert(root *Node, item int) *Node {
@@ -331,4 +332,61 @@ func inorderSucc(root *Node, item int) *Node {
 			return succ
 		}
 	}
+}
+
+func spiralLevelorder(root *Node) {
+
+	var s1 []*Node
+	var s2 []*Node
+
+	s1 = push(s1, root)
+
+	for len(s1) > 0 {
+
+		for len(s1) > 0 {
+			var s1Item *Node
+
+			s1, s1Item = pop(s1)
+
+			fmt.Print(s1Item.item, ", ")
+
+			if s1Item.left != nil {
+				s2 = push(s2, s1Item.left)
+			}
+			if s1Item.right != nil {
+				s2 = push(s2, s1Item.right)
+			}
+
+		}
+
+		for len(s2) > 0 {
+
+			var s2Item *Node
+
+			s2, s2Item = pop(s2)
+
+			fmt.Print(s2Item.item, ", ")
+
+			if s2Item.right != nil {
+				s1 = push(s1, s2Item.right)
+			}
+			if s2Item.left != nil {
+				s1 = push(s1, s2Item.left)
+			}
+		}
+	}
+
+}
+
+func push(s []*Node, item *Node) []*Node {
+
+	s = append(s, item)
+	return s
+}
+
+func pop(s []*Node) ([]*Node, *Node) {
+
+	p := s[len(s)-1]
+	s = s[:len(s)-1]
+	return s, p
 }
