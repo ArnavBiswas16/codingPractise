@@ -14,6 +14,8 @@ type Node struct {
 func main() {
 
 	var root *Node
+	root = insert(root, 41)
+	root = insert(root, 61)
 	root = insert(root, 2)
 	root = insert(root, 10)
 	root = insert(root, 30)
@@ -35,6 +37,7 @@ func main() {
 	postorder(root)
 	fmt.Println("\nlevelorder")
 	levelorder(root)
+	printLevel(root)
 	fmt.Println("\n", checkBST(root))
 
 	root = delete(root, 30)
@@ -175,17 +178,59 @@ func levelorder(root *Node) {
 	}
 
 	for len(q) != 0 {
-		fmt.Print(q[0].item, ", ")
 
-		if q[0].left != nil {
-			q = enqueue(q, q[0].left)
-		}
-
-		if q[0].right != nil {
-			q = enqueue(q, q[0].right)
-		}
-
+		temp := q[0]
 		q = dequeue(q)
+
+		fmt.Print(temp.item, ", ")
+
+		if temp.left != nil {
+			q = enqueue(q, temp.left)
+		}
+
+		if temp.right != nil {
+			q = enqueue(q, temp.right)
+		}
+
+	}
+}
+
+func printLevel(root *Node) {
+
+	if root == nil {
+		return
+	}
+	var q []*Node
+
+	if len(q) == 0 {
+		q = enqueue(q, root)
+		q = enqueue(q, nil)
+	}
+
+	i := 0
+	for len(q) != 0 {
+		i++
+		temp := q[0]
+		q = dequeue(q)
+
+		if temp != nil {
+			fmt.Print(temp.item, ", ")
+
+			if temp.left != nil {
+				q = enqueue(q, temp.left)
+			}
+			if temp.right != nil {
+				q = enqueue(q, temp.right)
+			}
+
+		} else {
+			if len(q) == 0 {
+				break
+			}
+			fmt.Println(" ") // change level
+			// reurn
+			q = enqueue(q, nil)
+		}
 	}
 }
 
