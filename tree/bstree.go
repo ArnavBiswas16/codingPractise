@@ -38,13 +38,16 @@ func main() {
 	fmt.Println("\nlevelorder")
 	levelorder(root)
 	printLevel(root)
+	leftView(root)
+	rightView(root)
+	spiralLevelorder(root)
+
 	fmt.Println("\n", checkBST(root))
 
 	root = delete(root, 30)
 	fmt.Println("\npreorder")
 	preorder(root)
 	fmt.Print("\n", inorderSucc(root, 13).item)
-	spiralLevelorder(root)
 }
 
 func insert(root *Node, item int) *Node {
@@ -207,7 +210,6 @@ func printLevel(root *Node) {
 		q = enqueue(q, root)
 		q = enqueue(q, nil)
 	}
-
 	i := 0
 	for len(q) != 0 {
 		i++
@@ -229,7 +231,6 @@ func printLevel(root *Node) {
 				break
 			}
 			fmt.Println(" ") // change level
-			// reurn
 			q = enqueue(q, nil)
 		}
 	}
@@ -389,4 +390,87 @@ func pop(s []*Node) ([]*Node, *Node) {
 	p := s[len(s)-1]
 	s = s[:len(s)-1]
 	return s, p
+}
+
+func leftView(root *Node) {
+
+	if root == nil {
+		return
+	}
+	var q []*Node
+
+	printStat := true
+	if len(q) == 0 {
+		q = enqueue(q, root)
+		q = enqueue(q, nil)
+	}
+
+	for len(q) != 0 {
+		temp := q[0]
+		q = dequeue(q)
+
+		if temp != nil {
+			if printStat {
+				fmt.Print(temp.item, ", ")
+				printStat = false
+			}
+
+			if temp.left != nil {
+				q = enqueue(q, temp.left)
+			}
+			if temp.right != nil {
+				q = enqueue(q, temp.right)
+			}
+
+		} else {
+			if len(q) == 0 {
+				break
+			}
+			fmt.Println(" ") // change level
+			q = enqueue(q, nil)
+			printStat = true
+		}
+	}
+}
+
+func rightView(root *Node) {
+
+	if root == nil {
+		return
+	}
+	var q []*Node
+
+	printStat := true
+	if len(q) == 0 {
+		q = enqueue(q, root)
+		q = enqueue(q, nil)
+	}
+
+	for len(q) != 0 {
+		temp := q[0]
+		q = dequeue(q)
+
+		if temp != nil {
+			if printStat {
+				fmt.Print(temp.item, ", ")
+				printStat = false
+			}
+
+			if temp.right != nil {
+				q = enqueue(q, temp.right)
+			}
+
+			if temp.left != nil {
+				q = enqueue(q, temp.left)
+			}
+
+		} else {
+			if len(q) == 0 {
+				break
+			}
+			fmt.Println(" ") // change level
+			q = enqueue(q, nil)
+			printStat = true
+		}
+	}
 }
