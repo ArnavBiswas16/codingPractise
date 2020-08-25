@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"sort"
 )
 
 type Node struct {
@@ -14,40 +15,67 @@ type Node struct {
 func main() {
 
 	var root *Node
+	var root1 *Node
 	root = insert(root, 41)
 	root = insert(root, 61)
 	root = insert(root, 2)
 	root = insert(root, 10)
 	root = insert(root, 30)
-	root = insert(root, 400)
-	root = insert(root, 1)
-	root = insert(root, 13)
-	root = insert(root, 32)
-	root = insert(root, 100)
-	fmt.Println(root.item)
-	fmt.Println(Search(root, 2))
-	fmt.Println(findMin(root))
-	fmt.Println(findMax(root))
-	fmt.Println(findHeight(root))
-	fmt.Println("preorder")
-	preorder(root)
-	fmt.Println("\ninorder")
-	inorder(root)
-	fmt.Println("\npostorder")
-	postorder(root)
-	fmt.Println("\nlevelorder")
-	levelorder(root)
-	printLevel(root)
-	leftView(root)
-	rightView(root)
-	spiralLevelorder(root)
+	root = insert(root, 50)
 
-	fmt.Println("\n", checkBST(root))
+	root1 = insert(root1, 41)
+	root1 = insert(root1, 61)
+	root1 = insert(root1, 2)
+	root1 = insert(root1, 10)
+	root1 = insert(root1, 30)
+	root1 = insert(root1, 50)
 
-	root = delete(root, 30)
-	fmt.Println("\npreorder")
-	preorder(root)
-	fmt.Print("\n", inorderSucc(root, 13).item)
+	// root = insert(root, 400)
+	// root = insert(root, 1)
+	// root = insert(root, 13)
+	// root = insert(root, 32)
+	// root = insert(root, 100)
+	// root = insert(root, 11)
+	// root = insert(root, 250)
+	// root = insert(root, 90)
+
+	// fmt.Println(root.item)
+	// fmt.Println(Search(root, 2))
+	// fmt.Println(findMin(root))
+	// fmt.Println(findMax(root))
+	// fmt.Println(findHeight(root))
+	// fmt.Println("preorder")
+	// preorder(root)
+	// fmt.Println("\ninorder")
+	// inorder(root)
+	// fmt.Println("")
+	// inorder(root1)
+	// fmt.Println("\npostorder")
+	// postorder(root)
+	// fmt.Println("\nlevelorder")
+	// levelorder(root)
+	// printLevel(root)
+	// leftView(root)
+	// rightView(root)
+	// spiralLevelorder(root)
+
+	// fmt.Println("\n", checkBST(root))
+
+	// root = delete(root, 30)
+	// fmt.Println("\npreorder")
+	// preorder(root)
+	// fmt.Print("\n", inorderSucc(root, 13).item)
+
+	// createTopView(root)
+	// createBotView(root)
+
+	// fmt.Println("diameter: ", diameter(root))
+
+	// fmt.Println(checkHeightBalanced(root))
+
+	// fmt.Println(alc(root, 250, 100))
+
+	fmt.Println(checkIdentical(root, root1))
 }
 
 func insert(root *Node, item int) *Node {
@@ -128,7 +156,9 @@ func findHeight(root *Node) int {
 		return 0
 	}
 
-	return int(math.Max(float64(findHeight(root.left)), float64(findHeight(root.right))) + 1)
+	return int(math.Max(
+		float64(findHeight(root.left)),
+		float64(findHeight(root.right)))) + 1
 
 }
 
@@ -473,4 +503,173 @@ func rightView(root *Node) {
 			printStat = true
 		}
 	}
+}
+
+func createTopView(root *Node) {
+
+	createTopBottomView(root, 0, 0)
+
+}
+
+func createBotView(root *Node) {
+
+	createTopBottomView(root, 0, 1)
+}
+
+func createTopBottomView(root *Node, hd int, flag int) {
+
+	if root == nil {
+		return
+	}
+	type o struct {
+		node *Node
+		hd   int
+	}
+	m := make(map[int][]*Node)
+
+	var q []o
+
+	q = append(q, o{root, hd})
+
+	if val, ok := m[hd]; ok {
+		m[hd] = append(m[hd], root)
+	} else {
+		m[hd] = append(val, root)
+	}
+
+	for len(q) > 0 {
+		hd = q[0].hd
+
+		curr := q[0].node
+		if curr.left != nil {
+
+			if val, ok := m[hd-1]; ok {
+				m[hd-1] = append(m[hd-1], curr.left)
+			} else {
+				m[hd-1] = append(val, curr.left)
+			}
+			q = append(q, o{curr.left, hd - 1})
+
+		}
+		if curr.right != nil {
+
+			if val, ok := m[hd+1]; ok {
+				m[hd+1] = append(m[hd+1], curr.right)
+			} else {
+				m[hd+1] = append(val, curr.right)
+			}
+			q = append(q, o{curr.right, hd + 1})
+
+		}
+		q = q[1:] // dequeue
+	}
+
+	var keys []int
+	for i, _ := range m {
+		keys = append(keys, i)
+		// fmt.Println(i, ": ", val[0].item, " ")
+	}
+
+	sort.Ints(keys)
+
+	if flag == 0 {
+		for _, k := range keys {
+			fmt.Print(m[k][0].item, " ")
+		}
+	}
+
+	if flag == 1 {
+		for _, k := range keys {
+			fmt.Print(m[k][len(m[k])-1].item, " ")
+		}
+	}
+
+}
+
+func diameter(root *Node) int {
+
+	if root == nil {
+		return 0
+	}
+	// fmt.Println(findHeight(root.left))
+	// return 0
+	// fmt.Println(float64(findHeight(root.left) + findHeight(root.right) + 3))
+	return int(math.Max(
+		float64(findHeight(root.left)+findHeight(root.right)+3),
+		math.Max(
+			float64(diameter(root.left)),
+			float64(diameter(root.right)))))
+}
+
+func checkHeightBalanced(root *Node) bool {
+
+	if root.left == nil && root.right == nil {
+		return true
+	}
+
+	if root.left != nil && root.right != nil {
+
+		left := checkHeightBalanced(root.left)
+		right := checkHeightBalanced(root.right)
+
+		if !left || !right {
+			return false
+		}
+
+		diff := findHeight(root.left) - findHeight(root.right)
+
+		if diff < 0 {
+			diff = diff * -1
+		}
+
+		if diff > 1 {
+			return false
+		} else {
+			return true
+		}
+
+	} else {
+		return false
+	}
+
+}
+
+func alc(root *Node, a int, b int) *Node {
+
+	if root == nil {
+		return nil
+	}
+	if root.item == a || root.item == b {
+		return root
+	}
+	var ls *Node
+	var rs *Node
+	if root.left != nil {
+		ls = alc(root.left, a, b)
+	}
+	if root.right != nil {
+		rs = alc(root.right, a, b)
+
+	}
+
+	if ls == nil {
+		return rs
+	}
+	if rs == nil {
+		return ls
+	}
+	return root
+
+}
+
+func checkIdentical(root1 *Node, root2 *Node) bool {
+	if root1 == nil && root2 == nil {
+		return true
+	}
+
+	if (root1.item == root2.item) && checkIdentical(root1.left, root2.left) && checkIdentical(root1.right, root2.right) {
+		return true
+	}
+	return false
+
 }
