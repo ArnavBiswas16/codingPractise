@@ -12,10 +12,11 @@ type Node struct {
 	right *Node
 }
 
+//
 func main() {
 
 	var root *Node
-	var root1 *Node
+	// var root1 *Node
 	root = insert(root, 41)
 	root = insert(root, 61)
 	root = insert(root, 2)
@@ -23,21 +24,21 @@ func main() {
 	root = insert(root, 30)
 	root = insert(root, 50)
 
-	root1 = insert(root1, 41)
-	root1 = insert(root1, 61)
-	root1 = insert(root1, 2)
-	root1 = insert(root1, 10)
-	root1 = insert(root1, 30)
-	root1 = insert(root1, 50)
+	// root1 = insert(root1, 41)
+	// root1 = insert(root1, 61)
+	// root1 = insert(root1, 2)
+	// root1 = insert(root1, 10)
+	// root1 = insert(root1, 30)
+	// root1 = insert(root1, 50)
 
-	// root = insert(root, 400)
-	// root = insert(root, 1)
-	// root = insert(root, 13)
-	// root = insert(root, 32)
-	// root = insert(root, 100)
-	// root = insert(root, 11)
-	// root = insert(root, 250)
-	// root = insert(root, 90)
+	root = insert(root, 400)
+	root = insert(root, 1)
+	root = insert(root, 13)
+	root = insert(root, 32)
+	root = insert(root, 100)
+	root = insert(root, 11)
+	root = insert(root, 250)
+	root = insert(root, 90)
 
 	// fmt.Println(root.item)
 	// fmt.Println(Search(root, 2))
@@ -75,7 +76,8 @@ func main() {
 
 	// fmt.Println(alc(root, 250, 100))
 
-	fmt.Println(checkIdentical(root, root1))
+	// fmt.Println(checkIdentical(root, root1))
+
 }
 
 func insert(root *Node, item int) *Node {
@@ -195,8 +197,8 @@ func postorder(root *Node) {
 		return
 	}
 
-	inorder(root.left)
-	inorder(root.right)
+	postorder(root.left)
+	postorder(root.right)
 	fmt.Print(root.item, ", ")
 
 }
@@ -667,6 +669,12 @@ func checkIdentical(root1 *Node, root2 *Node) bool {
 		return true
 	}
 
+	if root1 == nil && root2 != nil {
+		return false
+	}
+	if root2 == nil && root1 != nil {
+		return false
+	}
 	if (root1.item == root2.item) && checkIdentical(root1.left, root2.left) && checkIdentical(root1.right, root2.right) {
 		return true
 	}
