@@ -10,6 +10,7 @@ type Node struct {
 	item  int
 	left  *Node
 	right *Node
+	next  *Node
 }
 
 //
@@ -77,6 +78,9 @@ func main() {
 	// fmt.Println(alc(root, 250, 100))
 
 	// fmt.Println(checkIdentical(root, root1))
+
+	nextRightPointersOfTree(root)
+	fmt.Println(root.left.right.next.item)
 
 }
 
@@ -242,9 +246,9 @@ func printLevel(root *Node) {
 		q = enqueue(q, root)
 		q = enqueue(q, nil)
 	}
-	i := 0
+
 	for len(q) != 0 {
-		i++
+
 		temp := q[0]
 		q = dequeue(q)
 
@@ -680,4 +684,48 @@ func checkIdentical(root1 *Node, root2 *Node) bool {
 	}
 	return false
 
+}
+
+func nextRightPointersOfTree(root *Node) {
+	if root == nil {
+		return
+	}
+
+	var q []*Node
+
+	if len(q) == 0 {
+		q = enqueue(q, root)
+		q = enqueue(q, nil)
+
+	}
+
+	var tempPrev *Node
+	for len(q) != 0 {
+
+		temp := q[0]
+		q = dequeue(q)
+
+		if tempPrev != nil && temp != nil {
+			tempPrev.next = temp
+		}
+		tempPrev = temp
+
+		if temp != nil {
+
+			if temp.left != nil {
+				q = enqueue(q, temp.left)
+			}
+
+			if temp.right != nil {
+				q = enqueue(q, temp.right)
+			}
+
+		} else {
+			if len(q) == 1 {
+				break
+			} else {
+				q = enqueue(q, nil)
+			}
+		}
+	}
 }
