@@ -79,8 +79,18 @@ func main() {
 
 	// fmt.Println(checkIdentical(root, root1))
 
-	nextRightPointersOfTree(root)
-	fmt.Println(root.left.right.next.item)
+	// nextRightPointersOfTree(root)
+	// fmt.Println(root.left.right.next.item)
+
+	// e := treeIterator(root)
+	// fmt.Println(hasNext(e))
+	// var k *Node
+	// e, k = next(e)
+	// fmt.Println(k.item)
+	// e, k = next(e)
+	// fmt.Println(k.item)
+
+	findPair(root, root, 52)
 
 }
 
@@ -728,4 +738,63 @@ func nextRightPointersOfTree(root *Node) {
 			}
 		}
 	}
+}
+
+func floorCeil(root *Node, key int) {
+
+}
+
+func treeIterator(root *Node) []*Node {
+
+	if root == nil {
+		return nil
+	}
+	var s []*Node
+
+	return fillStack(root, s)
+
+}
+
+func fillStack(root *Node, s []*Node) []*Node {
+
+	for root != nil {
+		s = push(s, root)
+		root = root.left
+	}
+	return s
+}
+
+func hasNext(s []*Node) bool {
+	if len(s) == 0 {
+		return false
+	} else {
+		return true
+	}
+}
+
+func next(s []*Node) ([]*Node, *Node) {
+
+	s, item := pop(s)
+	s = fillStack(item.right, s)
+	return s, item
+}
+
+func findPair(root *Node, rootNode *Node, n int) {
+
+	if rootNode == nil {
+		return
+	}
+	findPair(root, rootNode.left, n)
+
+	tar := n - rootNode.item
+	if rootNode.item < tar {
+		x := Search(root, tar)
+
+		if x != nil && x.item == tar {
+			fmt.Println(rootNode.item, tar)
+		}
+	}
+
+	findPair(root, rootNode.right, n)
+
 }
