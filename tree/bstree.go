@@ -49,7 +49,7 @@ func main() {
 	// fmt.Println("preorder")
 	// preorder(root)
 	// fmt.Println("\ninorder")
-	// inorder(root)
+	inorder(root)
 	// fmt.Println("")
 	// inorder(root1)
 	// fmt.Println("\npostorder")
@@ -90,7 +90,10 @@ func main() {
 	// e, k = next(e)
 	// fmt.Println(k.item)
 
-	findPair(root, root, 52)
+	// findPair(root, root, 52)
+
+	kthSmallest(root, 3)
+	kthLargest(root, 5)
 
 }
 
@@ -797,4 +800,40 @@ func findPair(root *Node, rootNode *Node, n int) {
 
 	findPair(root, rootNode.right, n)
 
+}
+
+func kthSmallest(root *Node, n int) int {
+	if root == nil {
+		return n
+	}
+
+	n = kthSmallest(root.left, n)
+	n--
+	if n == 0 {
+		fmt.Println("\n", root.item)
+
+	}
+	if n > 0 {
+
+		n = kthSmallest(root.right, n)
+	}
+	return n
+}
+
+func kthLargest(root *Node, n int) int {
+	if root == nil {
+		return n
+	}
+
+	n = kthLargest(root.right, n)
+	n--
+	if n == 0 {
+		fmt.Println("\n", root.item)
+
+	}
+	if n > 0 {
+
+		n = kthLargest(root.left, n)
+	}
+	return n
 }
